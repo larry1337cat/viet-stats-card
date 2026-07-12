@@ -1,1 +1,5 @@
-{}
+{
+  "redirects": [
+    { "source": "/", "destination": "https://github.com/larry1337-cat/viet-stats-card/blob/main/README.md", "permanent": true }
+  ]
+}
