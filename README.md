@@ -2,26 +2,38 @@
 
 A GitHub stats card, rendered as a live SVG, with labels in Vietnamese and a custom theme. Built for embedding in `README.md` profile pages — same idea as `github-readme-stats`, but self-hosted, dependency-free, and localized.
 
-![Demo](https://viet-stats-card.vercel.app/api/stats?username=larry1337-cat&theme=dark)
+## Demo
+
+**Dark, bar chart**
+
+![Dark bar](https://viet-stats-card.vercel.app/api/stats?username=larry1337-cat&theme=dark&chart=bar)
+
+**Dark, pie chart**
+
+![Dark pie](https://viet-stats-card.vercel.app/api/stats?username=larry1337-cat&theme=dark&chart=pie)
+
+**Light, bar chart**
+
+![Light bar](https://viet-stats-card.vercel.app/api/stats?username=larry1337-cat&theme=light&chart=bar)
+
+**Light, pie chart**
+
+![Light pie](https://viet-stats-card.vercel.app/api/stats?username=larry1337-cat&theme=light&chart=pie)
 
 ## Usage
 
 ```markdown
-![Viet Stats Card](https://viet-stats-card.vercel.app/api/stats?username=YOUR_GITHUB_USERNAME&theme=dark)
+![Viet Stats Card](https://viet-stats-card.vercel.app/api/stats?username=YOUR_GITHUB_USERNAME&theme=dark&chart=bar)
 ```
 
 Query parameters:
 
-| Param      | Values          | Default | Description              |
-|------------|-----------------|---------|---------------------------|
-| `username` | any GitHub user | —       | required                  |
-| `theme`    | `dark`, `light` | `dark`  | color theme of the card   |
-
-## Example
-
-```markdown
-![Viet Stats Card](https://viet-stats-card.vercel.app/api/stats?username=larry1337-cat&theme=dark)
-```
+| Param           | Values          | Default | Description                                  |
+|-----------------|-----------------|---------|-----------------------------------------------|
+| `username`      | any GitHub user | —       | required                                       |
+| `theme`         | `dark`, `light` | `dark`  | color theme of the card                        |
+| `chart`         | `bar`, `pie`    | `bar`   | language breakdown chart style                 |
+| `include_forks` | `true`, `false` | `false` | include forked repos in language stats         |
 
 ## What it shows
 
@@ -29,7 +41,7 @@ Query parameters:
 - Total stars received across all repos
 - Followers
 - Following
-- Most used language
+- Language breakdown by code size (bar or pie), forks excluded by default
 
 ## Deploy your own
 
@@ -38,7 +50,7 @@ Query parameters:
 3. **Add New Project** → import your fork → **Deploy**
 4. (Optional but recommended) In **Project Settings → Environment Variables**, add:
    - `GH_TOKEN` = a GitHub Personal Access Token (no special scopes needed for public data)
-   - Raises the GitHub API rate limit from 60/hour to 5,000/hour
+   - Raises the GitHub API rate limit from 60/hour to 5,000/hour — needed since language stats fetch each repo individually
 5. Your card is live at `https://<your-project>.vercel.app/api/stats?username=<you>`
 
 ## Local development
