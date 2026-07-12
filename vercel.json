@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/stats.py": {
+      "runtime": "@vercel/python@4"
+    }
+  }
+}
