@@ -1,10 +1,13 @@
 from http.server import BaseHTTPRequestHandler
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse, parse_qs, quote
+from concurrent.futures import ThreadPoolExecutor
 import urllib.request
 import urllib.error
 import json
 import math
 import os
+
+LANG_FETCH_WORKERS = 10
 
 API = "https://api.github.com"
 
@@ -33,9 +36,10 @@ def fetch(url, token=None):
 
 
 def get_repos(username, token=None):
+    safe_username = quote(username)
     repos, page = [], 1
     while True:
-        batch = fetch(f"{API}/users/{username}/repos?per_page=100&page={page}", token)
+        batch = fetch(f"{API}/users/{safe_username}/repos?per_page=100&page={page}", token)
         if not batch:
             break
         repos += batch
@@ -45,18 +49,25 @@ def get_repos(username, token=None):
     return repos
 
 
+def fetch_repo_languages(username, repo_name, token=None):
+    safe_username = quote(username)
+    safe_repo_name = quote(repo_name)
+    try:
+        return fetch(f"{API}/repos/{safe_username}/{safe_repo_name}/languages", token)
+    except urllib.error.HTTPError:
+        return {}
+
+
 def get_language_breakdown(username, repos, token=None, include_forks=False, cap=30):
     targets = repos if include_forks else [r for r in repos if not r.get("fork")]
     targets = sorted(targets, key=lambda r: r.get("size", 0), reverse=True)[:cap]
 
     totals = {}
-    for r in targets:
-        try:
-            data = fetch(f"{API}/repos/{username}/{r['name']}/languages", token)
-        except urllib.error.HTTPError:
-            continue
-        for lang, count in data.items():
-            totals[lang] = totals.get(lang, 0) + count
+    with ThreadPoolExecutor(max_workers=LANG_FETCH_WORKERS) as pool:
+        results = pool.map(lambda r: fetch_repo_languages(username, r["name"], token), targets)
+        for data in results:
+            for lang, count in data.items():
+                totals[lang] = totals.get(lang, 0) + count
 
     total = sum(totals.values())
     if total == 0:
@@ -67,7 +78,7 @@ def get_language_breakdown(username, repos, token=None, include_forks=False, cap
 
 
 def get_stats(username, token=None, include_forks=False):
-    user = fetch(f"{API}/users/{username}", token)
+    user = fetch(f"{API}/users/{quote(username)}", token)
     repos = get_repos(username, token)
 
     stars = sum(r.get("stargazers_count", 0) for r in repos)
