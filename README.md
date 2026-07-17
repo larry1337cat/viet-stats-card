@@ -23,7 +23,7 @@ A GitHub stats card, rendered as a live SVG, with labels in Vietnamese and a cus
 ## Usage
 
 ```markdown
-![Viet Stats Card](https://viet-stats-card.vercel.app/api/stats?username=YOUR_GITHUB_USERNAME&theme=dark&chart=bar)
+![Viet Stats Card](https://viet-stats-card.vercel.app/api/stats?username=YOUR_GITHUB_USERNAME&theme=dark&chart=bar&langs_count=5)
 ```
 
 Query parameters:
@@ -34,6 +34,7 @@ Query parameters:
 | `theme`         | `dark`, `light` | `dark`  | color theme of the card                        |
 | `chart`         | `bar`, `pie`    | `bar`   | language breakdown chart style                 |
 | `include_forks` | `true`, `false` | `false` | include forked repos in language stats         |
+| `langs_count`   | `5`-`10`        | `5`     | number of languages shown in the breakdown     |
 
 ## What it shows
 
@@ -41,7 +42,7 @@ Query parameters:
 - Total stars received across all repos
 - Followers
 - Following
-- Language breakdown by code size (bar or pie), forks excluded by default
+- Language breakdown by code size (bar or pie), forks excluded by default, top 5 to 10 languages via `langs_count`
 
 ## Deploy your own
 
