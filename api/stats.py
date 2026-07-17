@@ -58,7 +58,20 @@ def fetch_repo_languages(username, repo_name, token=None):
         return {}
 
 
-def get_language_breakdown(username, repos, token=None, include_forks=False, cap=30):
+MIN_LANGS_COUNT = 5
+MAX_LANGS_COUNT = 10
+DEFAULT_LANGS_COUNT = 5
+
+
+def clamp_langs_count(value):
+    try:
+        count = int(value)
+    except (TypeError, ValueError):
+        return DEFAULT_LANGS_COUNT
+    return max(MIN_LANGS_COUNT, min(MAX_LANGS_COUNT, count))
+
+
+def get_language_breakdown(username, repos, token=None, include_forks=False, cap=30, langs_count=DEFAULT_LANGS_COUNT):
     targets = repos if include_forks else [r for r in repos if not r.get("fork")]
     targets = sorted(targets, key=lambda r: r.get("size", 0), reverse=True)[:cap]
 
@@ -73,16 +86,16 @@ def get_language_breakdown(username, repos, token=None, include_forks=False, cap
     if total == 0:
         return []
 
-    breakdown = sorted(totals.items(), key=lambda x: x[1], reverse=True)[:5]
+    breakdown = sorted(totals.items(), key=lambda x: x[1], reverse=True)[:langs_count]
     return [(lang, round(count / total * 100, 1)) for lang, count in breakdown]
 
 
-def get_stats(username, token=None, include_forks=False):
+def get_stats(username, token=None, include_forks=False, langs_count=DEFAULT_LANGS_COUNT):
     user = fetch(f"{API}/users/{quote(username)}", token)
     repos = get_repos(username, token)
 
     stars = sum(r.get("stargazers_count", 0) for r in repos)
-    langs_breakdown = get_language_breakdown(username, repos, token, include_forks)
+    langs_breakdown = get_language_breakdown(username, repos, token, include_forks, langs_count=langs_count)
     top_lang = langs_breakdown[0][0] if langs_breakdown else "N/A"
 
     return {
@@ -214,6 +227,7 @@ class handler(BaseHTTPRequestHandler):
         theme = query.get("theme", ["dark"])[0]
         chart = query.get("chart", ["bar"])[0]
         include_forks = query.get("include_forks", ["false"])[0].lower() == "true"
+        langs_count = clamp_langs_count(query.get("langs_count", [DEFAULT_LANGS_COUNT])[0])
         token = os.environ.get("GH_TOKEN")
 
         self.send_response(200)
@@ -226,7 +240,7 @@ class handler(BaseHTTPRequestHandler):
             return
 
         try:
-            data = get_stats(username, token, include_forks)
+            data = get_stats(username, token, include_forks, langs_count)
             self.wfile.write(render_card(data, theme, chart).encode())
         except urllib.error.HTTPError as e:
             if e.code == 404:
