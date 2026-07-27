@@ -1,6 +1,6 @@
 # Viet Stats Card
 
-A GitHub stats card, rendered as a live SVG, with labels in Vietnamese and a custom theme. Built for embedding in `README.md` profile pages — same idea as `github-readme-stats`, but self-hosted, dependency-free, and localized.
+A GitHub stats card, rendered as a live SVG, with labels in Vietnamese and a custom theme. Built for embedding in `README.md` profile pages - same idea as `github-readme-stats`, but self-hosted, dependency-free, and localized.
 
 ## Demo
 
