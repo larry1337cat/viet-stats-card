@@ -6,19 +6,19 @@ A GitHub stats card, rendered as a live SVG, with labels in Vietnamese and a cus
 
 **Dark, bar chart**
 
-![Dark bar](https://viet-stats-card.vercel.app/api/stats?username=larry1337-cat&theme=dark&chart=bar)
+![Dark bar](https://viet-stats-card.vercel.app/api/stats?username=larry1337cat&theme=dark&chart=bar)
 
 **Dark, pie chart**
 
-![Dark pie](https://viet-stats-card.vercel.app/api/stats?username=larry1337-cat&theme=dark&chart=pie)
+![Dark pie](https://viet-stats-card.vercel.app/api/stats?username=larry1337cat&theme=dark&chart=pie)
 
 **Light, bar chart**
 
-![Light bar](https://viet-stats-card.vercel.app/api/stats?username=larry1337-cat&theme=light&chart=bar)
+![Light bar](https://viet-stats-card.vercel.app/api/stats?username=larry1337cat&theme=light&chart=bar)
 
 **Light, pie chart**
 
-![Light pie](https://viet-stats-card.vercel.app/api/stats?username=larry1337-cat&theme=light&chart=pie)
+![Light pie](https://viet-stats-card.vercel.app/api/stats?username=larry1337cat&theme=light&chart=pie)
 
 ## Usage
 
